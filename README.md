@@ -1,1 +1,1 @@
-# sql-judge-api
+Сервер API для SQL Judge.
