@@ -1,7 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"github.com/elmanelman/sql-judge-api/store"
+	"github.com/elmanelman/sql-judge-api/store/postgresstore"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -21,16 +23,20 @@ func NewServer(store store.Store) *server {
 
 	s.routes()
 
-	s.configureLogger()
-
 	return s
 }
 
-func (s *server) configureLogger() {
-	s.logger.SetLevel(logrus.DebugLevel)
-}
+func (s *server) Start(config *Config) {
+	db, err := sql.Open("postgres", config.PostgresConfig.ConnectionString())
+	if err != nil {
+		s.logger.Error("unable to connect database:", err)
+		return
+	}
 
-func (s *server) Start() {
+	s.store = postgresstore.New(db) // TODO make independent of postgres
+
+	s.logger.Level = loggerLevels[config.LoggerConfig.Level]
+
 	if err := s.router.Run(); err != nil {
 		s.logger.Fatalf("router error: %s", err)
 	}
