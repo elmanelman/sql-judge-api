@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/elmanelman/sql-judge-api/store"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -8,13 +9,14 @@ import (
 type server struct {
 	router *gin.Engine
 	logger *logrus.Logger
-	// TODO add store
+	store  store.Store
 }
 
-func NewServer() *server {
+func NewServer(store store.Store) *server {
 	s := &server{
 		router: gin.Default(),
 		logger: logrus.New(),
+		store:  store,
 	}
 
 	s.routes()
