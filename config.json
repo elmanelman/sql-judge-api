@@ -2,9 +2,9 @@
   "postgres": {
     "host": "localhost",
     "port": "5432",
-    "user": "",
-    "password": "",
-    "database_name": ""
+    "user": "judge",
+    "password": "judge",
+    "database_name": "judge"
   },
   "logger": {
     "level": "debug"

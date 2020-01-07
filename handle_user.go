@@ -4,6 +4,7 @@ import (
 	"github.com/elmanelman/sql-judge-api/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func (s *server) handleUserCreate() gin.HandlerFunc {
@@ -38,5 +39,38 @@ func (s *server) handleUserCreate() gin.HandlerFunc {
 			Login: u.Login,
 		}
 		c.JSON(http.StatusOK, rsp)
+	}
+}
+
+func (s *server) handleUserFind() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idString := c.Param("id")
+		id, err := strconv.ParseInt(idString, 10, 64)
+		if err != nil {
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+
+		u, err := s.store.User().Find(int(id))
+		if err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			return
+		}
+
+		c.JSON(http.StatusOK, u)
+	}
+}
+
+func (s *server) handleUserFindByLogin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		login := c.Param("login")
+
+		u, err := s.store.User().FindByLogin(login)
+		if err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			return
+		}
+
+		c.JSON(http.StatusOK, u)
 	}
 }

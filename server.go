@@ -6,6 +6,8 @@ import (
 	"github.com/elmanelman/sql-judge-api/store/postgresstore"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+
+	_ "github.com/lib/pq"
 )
 
 type server struct {
@@ -29,7 +31,7 @@ func NewServer(store store.Store) *server {
 func (s *server) Start(config *Config) {
 	db, err := sql.Open("postgres", config.PostgresConfig.ConnectionString())
 	if err != nil {
-		s.logger.Error("unable to connect database:", err)
+		s.logger.Error("unable to connect db: ", err)
 		return
 	}
 

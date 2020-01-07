@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "github.com/lib/pq" // TODO review postgres drivers
 	"log"
 )
 
